@@ -28,7 +28,7 @@ def run(args):
                                                      args.pretrained).to(device)
     if args.load_init != "":
         state_dict = torch.load(args.load_init)
-        model.load_state_dict(state_dict)
+        model.load_state_dict(state_dict, strict=False)
 
     loss = nn.CrossEntropyLoss()
     opt_class, opt_kwargs = load.optimizer(args.optimizer)
