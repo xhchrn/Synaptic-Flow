@@ -27,7 +27,9 @@ def run(args):
                                                      args.dense_classifier, 
                                                      args.pretrained).to(device)
     if args.load_init != "":
-        model.load_state_dict(args.load_init)
+        state_dict = torch.load(args.load_init)
+        model.load_state_dict(state_dict)
+
     loss = nn.CrossEntropyLoss()
     opt_class, opt_kwargs = load.optimizer(args.optimizer)
     optimizer = opt_class(generator.parameters(model), lr=args.lr, weight_decay=args.weight_decay, **opt_kwargs)
