@@ -26,16 +26,23 @@ def run(args):
                                                      num_classes, 
                                                      args.dense_classifier, 
                                                      args.pretrained).to(device)
+    if args.load_init != "":
+        model.load_state_dict(args.load_init)
     loss = nn.CrossEntropyLoss()
     opt_class, opt_kwargs = load.optimizer(args.optimizer)
     optimizer = opt_class(generator.parameters(model), lr=args.lr, weight_decay=args.weight_decay, **opt_kwargs)
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=args.lr_drops, gamma=args.lr_drop_rate)
 
+    if args.save:
+        torch.save(model.state_dict(),"{}/init_model.pt".format(args.result_dir))
 
     ## Pre-Train ##
     print('Pre-Train for {} epochs.'.format(args.pre_epochs))
     pre_result = train_eval_loop(model, loss, optimizer, scheduler, train_loader, 
                                  test_loader, device, args.pre_epochs, args.verbose)
+
+    if args.save:
+        torch.save(model.state_dict(),"{}/pre-train_model.pt".format(args.result_dir))
 
     ## Prune ##
     print('Pruning with {} for {} epochs.'.format(args.pruner, args.prune_epochs))
@@ -72,8 +79,6 @@ def run(args):
         pre_result.to_pickle("{}/pre-train.pkl".format(args.result_dir))
         post_result.to_pickle("{}/post-train.pkl".format(args.result_dir))
         prune_result.to_pickle("{}/compression.pkl".format(args.result_dir))
-        torch.save(model.state_dict(),"{}/model.pt".format(args.result_dir))
+        torch.save(model.state_dict(),"{}/post-train_model.pt".format(args.result_dir))
         torch.save(optimizer.state_dict(),"{}/optimizer.pt".format(args.result_dir))
         torch.save(scheduler.state_dict(),"{}/scheduler.pt".format(args.result_dir))
-
-

@@ -29,6 +29,8 @@ if __name__ == '__main__':
                         help='ensure last layer of model is dense (default: False)')
     training_args.add_argument('--pretrained', type=bool, default=False,
                         help='load pretrained weights (default: False)')
+    training_args.add_argument('--load-init', type=str, default='',
+                        help='load initialization from an existing state dict')
     training_args.add_argument('--optimizer', type=str, default='adam', choices=['sgd','momentum','adam','rms'],
                         help='optimizer (default: adam)')
     training_args.add_argument('--train-batch-size', type=int, default=64,
@@ -139,4 +141,3 @@ if __name__ == '__main__':
         imp_conservation.run(args)
     if args.experiment == 'schedule-conservation':
         schedule_conservation.run(args)
-
