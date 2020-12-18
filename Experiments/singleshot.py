@@ -22,6 +22,8 @@ def run(args):
 
     ## Model, Loss, Optimizer ##
     print('Creating {}-{} model.'.format(args.model_class, args.model))
+    # By default `dense_classifier` is False, which means that the classifier
+    # layers can also be pruned
     model = load.model(args.model, args.model_class)(input_shape, 
                                                      num_classes, 
                                                      args.dense_classifier, 
@@ -48,12 +50,19 @@ def run(args):
 
     ## Prune ##
     print('Pruning with {} for {} epochs.'.format(args.pruner, args.prune_epochs))
-    pruner = load.pruner(args.pruner)(generator.masked_parameters(model, args.prune_bias, args.prune_batchnorm, args.prune_residual))
+    pruner = load.pruner(args.pruner)(
+        generator.masked_parameters(model, args.prune_bias, args.prune_batchnorm, args.prune_residual),
+        num_classes
+    )
     sparsity = 10**(-float(args.compression))
+    # classifier_sparsity = 10**(-float(args.classifier_compression))
+    classifier_sparsity = (-1.0 if args.classifier_compression < 0
+                           else 10**(-float(args.classifier_compression)))
     prune_loop(model, loss, pruner, prune_loader, device, sparsity, 
-               args.compression_schedule, args.mask_scope, args.prune_epochs, args.reinitialize, args.prune_train_mode)
+               args.compression_schedule, args.mask_scope, args.prune_epochs,
+               args.reinitialize, args.prune_train_mode,
+               classifier_sparsity=classifier_sparsity)
 
-    
     ## Post-Train ##
     print('Post-Training for {} epochs.'.format(args.post_epochs))
     post_result = train_eval_loop(model, loss, optimizer, scheduler, train_loader, 

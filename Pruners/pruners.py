@@ -2,9 +2,10 @@ import torch
 import numpy as np
 
 class Pruner:
-    def __init__(self, masked_parameters):
+    def __init__(self, masked_parameters, num_classes):
         self.masked_parameters = list(masked_parameters)
         self.scores = {}
+        self.num_classes = num_classes
 
     def score(self, model, loss, dataloader, device):
         raise NotImplementedError
@@ -28,25 +29,32 @@ class Pruner:
                 one = torch.tensor([1.]).to(mask.device)
                 mask.copy_(torch.where(score <= threshold, zero, one))
     
-    def _local_mask(self, sparsity):
+    def _local_mask(self, sparsity, classifier_sparsity=-1):
         r"""Updates masks of model with scores by sparsity level parameter-wise.
         """
+        if classifier_sparsity < 0:
+            classifier_sparsity = sparsity
         for mask, param in self.masked_parameters:
             score = self.scores[id(param)]
-            k = int((1.0 - sparsity) * score.numel())
+            if param.dim() == 2 and param.shape[0] == self.num_classes:
+                cur_sparsity = classifier_sparsity
+            else:
+                cur_sparsity = sparsity
+            # k = int((1.0 - sparsity) * score.numel())
+            k = int((1.0 - cur_sparsity) * score.numel())
             if not k < 1:
                 threshold, _ = torch.kthvalue(torch.flatten(score), k)
                 zero = torch.tensor([0.]).to(mask.device)
                 one = torch.tensor([1.]).to(mask.device)
                 mask.copy_(torch.where(score <= threshold, zero, one))
 
-    def mask(self, sparsity, scope):
+    def mask(self, sparsity, scope, classifier_sparsity=None):
         r"""Updates masks of model with scores by sparsity according to scope.
         """
         if scope == 'global':
             self._global_mask(sparsity)
         if scope == 'local':
-            self._local_mask(sparsity)
+            self._local_mask(sparsity, classifier_sparsity)
 
     @torch.no_grad()
     def apply_mask(self):
@@ -198,4 +206,3 @@ class SynFlow(Pruner):
             p.grad.data.zero_()
 
         nonlinearize(model, signs)
-

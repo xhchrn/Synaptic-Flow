@@ -94,6 +94,7 @@ def model(model_architecture, model_class):
     default_models = {
         'fc' : mlp.fc,
         'conv' : mlp.conv,
+        'lenet-300-100' : mlp.lenet_300_100,
     }
     lottery_models = {
         'vgg11' : lottery_vgg.vgg11,
@@ -182,4 +183,3 @@ def optimizer(optimizer):
         'rms' : (optim.RMSprop, {})
     }
     return optimizers[optimizer]
-

@@ -56,6 +56,8 @@ if __name__ == '__main__':
                         help='prune strategy (default: rand)')
     pruning_args.add_argument('--compression', type=float, default=0.0,
                         help='quotient of prunable non-zero prunable parameters before and after pruning (default: 1.0)')
+    pruning_args.add_argument('--classifier-compression', type=float, default=-1.0,
+                        help='quotient of prunable non-zero prunable parameters in the classifier layers before and after pruning (default: -1.0)')
     pruning_args.add_argument('--prune-epochs', type=int, default=1,
                         help='number of iterations for scoring (default: 1)')
     pruning_args.add_argument('--compression-schedule', type=str, default='exponential', choices=['linear','exponential'],
