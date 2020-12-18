@@ -80,8 +80,8 @@ class Pruner:
 
 
 class Rand(Pruner):
-    def __init__(self, masked_parameters):
-        super(Rand, self).__init__(masked_parameters)
+    def __init__(self, masked_parameters, num_classes):
+        super(Rand, self).__init__(masked_parameters, num_classes)
 
     def score(self, model, loss, dataloader, device):
         for _, p in self.masked_parameters:
@@ -89,8 +89,8 @@ class Rand(Pruner):
 
 
 class Mag(Pruner):
-    def __init__(self, masked_parameters):
-        super(Mag, self).__init__(masked_parameters)
+    def __init__(self, masked_parameters, num_classes):
+        super(Mag, self).__init__(masked_parameters, num_classes)
     
     def score(self, model, loss, dataloader, device):
         for _, p in self.masked_parameters:
@@ -99,8 +99,8 @@ class Mag(Pruner):
 
 # Based on https://github.com/mi-lad/snip/blob/master/snip.py#L18
 class SNIP(Pruner):
-    def __init__(self, masked_parameters):
-        super(SNIP, self).__init__(masked_parameters)
+    def __init__(self, masked_parameters, num_classes):
+        super(SNIP, self).__init__(masked_parameters, num_classes)
 
     def score(self, model, loss, dataloader, device):
 
@@ -130,8 +130,8 @@ class SNIP(Pruner):
 
 # Based on https://github.com/alecwangcq/GraSP/blob/master/pruner/GraSP.py#L49
 class GraSP(Pruner):
-    def __init__(self, masked_parameters):
-        super(GraSP, self).__init__(masked_parameters)
+    def __init__(self, masked_parameters, num_classes):
+        super(GraSP, self).__init__(masked_parameters, num_classes)
         self.temp = 200
         self.eps = 1e-10
 
@@ -173,8 +173,8 @@ class GraSP(Pruner):
 
 
 class SynFlow(Pruner):
-    def __init__(self, masked_parameters):
-        super(SynFlow, self).__init__(masked_parameters)
+    def __init__(self, masked_parameters, num_classes):
+        super(SynFlow, self).__init__(masked_parameters, num_classes)
 
     def score(self, model, loss, dataloader, device):
       
