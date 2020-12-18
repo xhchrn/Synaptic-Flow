@@ -37,7 +37,9 @@ python3 main.py --gpu 1 \
     --dataset mnist --model lenet-300-100 \
     --train-batch-size 128 --post-epochs 20 \
     --load-init ../LTH-Pytorch/lenet_mnist_init_state_dict_for_synflow_repo.pth.tar \
-    --compression 0.8721901170725075 --mask-scope local \
+    --compression 0.96910013 \
+    --classifier-compression 0.45757491 \
+    --mask-scope local \
     --pruner synflow \
     --experiment singleshot --expid 0 \
     --result-dir mnist/lenet_synflow --seed 118
