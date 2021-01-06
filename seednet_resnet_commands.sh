@@ -1,10 +1,9 @@
 python3 main.py --gpu 1 \
-    --dataset mnist --model lenet-300-100 \
-    --train-batch-size 128 --post-epochs 20 \
-    --load-init ./mnist/lenet/initial_classifier_state_dict_lt.pt \
-    --pruner synflow --compression 1.0 --mask-scope local \
+    --dataset cifar10 --model-class seednet --model resnet18 --init-method standard \
+    --train-batch-size 128 --post-epochs 1 \
+    --pruner snip --compression 1.0 \
     --experiment singleshot --expid 0 \
-    --result-dir mnist/lenet_sf --seed 118
+    --result-dir seednet/resnet18/standard_snip_sp0.1 --seed 118
 
 python3 main.py --gpu 2 \
     --dataset mnist --model lenet-300-100 \
@@ -18,7 +17,7 @@ python3 main.py --gpu 3 \
     --dataset mnist --model lenet-300-100 \
     --train-batch-size 128 --post-epochs 20 \
     --load-init ./mnist/lenet/initial_classifier_state_dict_lt.pt \
-    --pruner snip --compression 1.0 --mask-scope local \
+    --pruner synflow --compression 1.0 --mask-scope local \
     --experiment singleshot --expid 0 \
     --result-dir mnist/lenet_snip --seed 118
 

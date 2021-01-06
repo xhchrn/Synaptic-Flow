@@ -2,13 +2,14 @@ import torch
 import numpy as np
 from torchvision import datasets, transforms
 import torch.optim as optim
-from Models import mlp
+from Models import mlp, seednet_resnet
 from Models import lottery_vgg
 from Models import lottery_resnet
 from Models import tinyimagenet_vgg
 from Models import tinyimagenet_resnet
 from Models import imagenet_vgg
 from Models import imagenet_resnet
+from Models import seednet_resnet
 from Pruners import pruners
 from Utils import custom_datasets
 
@@ -155,11 +156,19 @@ def model(model_architecture, model_class):
         'wide-resnet50' : imagenet_resnet.wide_resnet50_2,
         'wide-resnet101' : imagenet_resnet.wide_resnet101_2,
     }
+    seednet_models = {
+        'resnet18': seednet_resnet.ResNet18,
+        'resnet34': seednet_resnet.ResNet34,
+        'resnet50': seednet_resnet.ResNet50,
+        'resnet101': seednet_resnet.ResNet101,
+        'resnet152': seednet_resnet.ResNet152,
+    }
     models = {
         'default' : default_models,
         'lottery' : lottery_models,
         'tinyimagenet' : tinyimagenet_models,
-        'imagenet' : imagenet_models
+        'imagenet' : imagenet_models,
+        'seednet' : seednet_models,
     }
     if model_class == 'imagenet':
         print("WARNING: ImageNet models do not implement `dense_classifier`.")

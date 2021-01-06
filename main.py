@@ -31,6 +31,8 @@ if __name__ == '__main__':
                         help='load pretrained weights (default: False)')
     training_args.add_argument('--load-init', type=str, default='',
                         help='load initialization from an existing state dict')
+    training_args.add_argument('--init-method', type=str, default='standard',
+                        help='how to initialize the weights in network')
     training_args.add_argument('--optimizer', type=str, default='adam', choices=['sgd','momentum','adam','rms'],
                         help='optimizer (default: adam)')
     training_args.add_argument('--train-batch-size', type=int, default=64,

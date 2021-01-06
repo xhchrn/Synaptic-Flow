@@ -27,7 +27,8 @@ def run(args):
     model = load.model(args.model, args.model_class)(input_shape, 
                                                      num_classes, 
                                                      args.dense_classifier, 
-                                                     args.pretrained).to(device)
+                                                     args.pretrained,
+                                                     init_method=args.init_method).to(device)
     if args.load_init != "":
         state_dict = torch.load(args.load_init)
         model.load_state_dict(state_dict, strict=False)
