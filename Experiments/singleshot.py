@@ -41,9 +41,13 @@ def run(args):
         torch.save(model.state_dict(),"{}/init_model.pt".format(args.result_dir))
 
     ## Pre-Train ##
-    print('Pre-Train for {} epochs.'.format(args.pre_epochs))
+    if args.pre_steps <= 0:
+        print('Pre-Train for {} epochs.'.format(args.pre_epochs))
+    else:
+        print('Pre-Train for {} steps.'.format(args.pre_steps))
     pre_result = train_eval_loop(model, loss, optimizer, scheduler, train_loader, 
-                                 test_loader, device, args.pre_epochs, args.verbose)
+                                 test_loader, device, args.pre_epochs, args.verbose,
+                                 steps=args.pre_steps)
 
     if args.save:
         torch.save(model.state_dict(),"{}/pre-train_model.pt".format(args.result_dir))

@@ -40,33 +40,60 @@ python3 main.py --gpu 1 \
     --compression 0.96910013 \
     --classifier-compression 0.45757491 \
     --mask-scope local \
+    --optimizer sgd --lr 0.1 --weight-decay 0.0 \
     --pruner synflow \
     --experiment singleshot --expid 0 \
     --result-dir mnist/lenet_synflow --seed 118
 
-python3 main.py --gpu 2 \
+python3 main.py --gpu 0 \
     --dataset mnist --model lenet-300-100 \
     --train-batch-size 128 --post-epochs 20 \
     --load-init ../LTH-Pytorch/lenet_mnist_init_state_dict_for_synflow_repo.pth.tar \
-    --compression 0.8721901170725075 --mask-scope local \
+    --compression 0.96910013 \
+    --classifier-compression 0.45757491 \
+    --mask-scope local \
+    --optimizer sgd --lr 0.1 --weight-decay 0.0 \
     --pruner grasp \
     --experiment singleshot --expid 0 \
     --result-dir mnist/lenet_grasp --seed 118
 
-python3 main.py --gpu 3 \
+python3 main.py --gpu 0 \
     --dataset mnist --model lenet-300-100 \
     --train-batch-size 128 --post-epochs 20 \
     --load-init ../LTH-Pytorch/lenet_mnist_init_state_dict_for_synflow_repo.pth.tar \
-    --compression 0.8721901170725075 --mask-scope local \
+    --compression 0.96910013 \
+    --classifier-compression 0.45757491 \
+    --mask-scope local \
+    --optimizer sgd --lr 0.1 --weight-decay 0.0 \
     --pruner snip \
     --experiment singleshot --expid 0 \
     --result-dir mnist/lenet_snip --seed 118
 
-python3 main.py --gpu 4 \
+python3 main.py --gpu 0 \
     --dataset mnist --model lenet-300-100 \
     --train-batch-size 128 --post-epochs 20 \
     --load-init ../LTH-Pytorch/lenet_mnist_init_state_dict_for_synflow_repo.pth.tar \
-    --compression 0.8721901170725075 --mask-scope local \
+    --compression 0.96910013 \
+    --classifier-compression 0.45757491 \
+    --mask-scope local \
+    --optimizer sgd --lr 0.1 --weight-decay 0.0 \
     --pruner mag \
     --experiment singleshot --expid 0 \
     --result-dir mnist/lenet_mag --seed 118
+
+
+for prune_method in synflow grasp snip mag; do
+    for seed in 118 218 318 418 518; do
+        python3 main.py --gpu 1 \
+            --dataset mnist --model lenet-300-100 \
+            --train-batch-size 128 --post-epochs 20 \
+            --load-init ../LTH-Pytorch/lenet_mnist_init_state_dict_for_synflow_repo.pth.tar \
+            --compression 0.96910013 \
+            --classifier-compression 0.45757491 \
+            --mask-scope local \
+            --optimizer sgd --lr 0.1 --weight-decay 0.0 \
+            --pruner $prune_method \
+            --experiment singleshot --expid 0 \
+            --result-dir "mnist/lenet_${prune_method}_${seed}" --seed $seed
+    done
+done
